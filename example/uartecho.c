@@ -36,7 +36,7 @@ void help()
     printf("Option:  \n");
     printf("  -d   serial port , default /dev/ttyS0\n");
     printf("  -b   baud rate , default 115200 \n");
-    printf("  -p   parity , O,E or N ,default N \n");
+    printf("  -p   parity , O/o , E/e or N/n , default N \n");
     printf("  -x   data bit , 7 or 8 ,defalut 8 \n");
     printf("  -z   stop bit , 1 or 2 ,default 1 \n");
     printf("  -v   output more infomation\n");

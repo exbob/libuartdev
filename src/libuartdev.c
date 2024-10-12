@@ -99,7 +99,7 @@ If the creation fails, it will return a null pointer，and set the errno.
 
 arguments : const char *port , UART device file name ,"/dev/ttyS1", "/dev/ttyUSB0"
             int baud , 1200 ~ 4000000
-            char parity , 'N', 'O', 'E'
+            char parity , 'N'/'n', 'O'/'o', 'E'/'e'
             int data_bit , data bit , 5, 6, 7, 8
             int stop_bit , stop bit , 1 or 2
 */
@@ -178,6 +178,9 @@ uartdev_t *uartdev_new(const char *port, int baud, int data_bit, char parity, in
     case 'N':
     case 'E':
     case 'O':
+    case 'n':
+    case 'e':
+    case 'o':
         dev->parity = parity;
         break;
     default:
@@ -193,7 +196,6 @@ uartdev_t *uartdev_new(const char *port, int baud, int data_bit, char parity, in
 
     return dev;
 }
-
 
 /*
 Delete the devicev structure created by uartdev_new(), and free the memory.
@@ -220,7 +222,7 @@ int uartdev_del(uartdev_t *dev)
 
 /*
 Open serial port and the attributes。
-If successful return 0, otherwise errno is returned 
+If successful return 0, otherwise errno is returned
 */
 int uartdev_setup(uartdev_t *dev)
 {
@@ -322,14 +324,17 @@ int uartdev_setup(uartdev_t *dev)
     switch (dev->parity)
     {
     case 'N':
+    case 'n':
         newtio.c_cflag &= ~PARENB;
         newtio.c_cflag &= ~PARODD;
         break;
     case 'E':
+    case 'e':
         newtio.c_cflag |= PARENB;
         newtio.c_cflag &= ~PARODD;
         break;
     case 'O':
+    case 'o':
         newtio.c_cflag |= PARENB;
         newtio.c_cflag |= PARODD;
         break;

@@ -28,7 +28,7 @@ typedef struct _uartdev_t
     int baud;
     /* Data bit : 5, 6, 7, 8 */
     uint8_t data_bit;
-    /* Parity: 'N', 'O', 'E' */
+    /* Parity: 'N'/'n', 'O'/'o', 'E'/'e' */
     char parity;
     /* Stop bit: 1, 2 */
     uint8_t stop_bit;
