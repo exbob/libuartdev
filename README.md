@@ -76,8 +76,31 @@ Option:
 
 ## 串口编程
 
-在 Linux 下使用 C 语言进行串口编程，通常是调用 [GNU C Library](https://www.gnu.org/software/libc/) 提供的 [Low-Level Terminal Interface](https://www.gnu.org/software/libc/manual/html_node/Low_002dLevel-Terminal-Interface.html?spm=wolai.workspace.0.0.7bf85fdcxzdAL7)。
+在 Linux 下使用 C 语言进行串口编程，通常是调用 [GNU C Library](https://www.gnu.org/software/libc/) 提供的 [Low-Level Terminal Interface](https://www.gnu.org/software/libc/manual/html_node/Low_002dLevel-Terminal-Interface.html?spm=wolai.workspace.0.0.7bf85fdcxzdAL7)。核心是使用 `struct termios` 结构设置串口的各种属性：
 
+```
+struct termios
+  {
+    tcflag_t c_iflag;       /* input mode flags */
+    tcflag_t c_oflag;       /* output mode flags */
+    tcflag_t c_cflag;       /* control mode flags */
+    tcflag_t c_lflag;       /* local mode flags */
+    cc_t c_line;            /* line discipline */
+    cc_t c_cc[NCCS];        /* control characters */
+    speed_t c_ispeed;       /* input speed */
+    speed_t c_ospeed;       /* output speed */
+  };
+
+// 获取属性
+int tcgetattr (int filedes, struct termios *termios-p)
+// 设置属性
+int tcsetattr (int filedes, int when, const struct termios *termios-p)
+```
+
+类 Unix 系统的串口编程支持两种基本的输入模式：规范模式和非规范模式：
+
+- 规范模式也叫行模式，接收数据是以换行符（'\n'）、EOF或EOL字符结束的行进行处理，在用户输入完整行之前，无法读取任何输入，并且 read 函数最多返回一行输入，无论请求多少字节。并且可以根据一些特殊字符控制输入行为。主要用于虚拟终端。
+- 非规范模式也叫做 Raw 模式，接收数据不被分组，read 函数请求任意长度的数据，可以用 VMIN 和 VTIME 控制接收细粒度。主要用于设备之间的数据通讯。
 
 ## License
 
