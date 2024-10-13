@@ -221,7 +221,7 @@ int uartdev_del(uartdev_t *dev)
 }
 
 /*
-Open serial port and the attributes。
+Open serial port and set the attributes use uartdev_t *dev。
 If successful return 0, otherwise errno is returned
 */
 int uartdev_setup(uartdev_t *dev)
@@ -279,7 +279,8 @@ int uartdev_setup(uartdev_t *dev)
     */
     newtio.c_cflag |= CLOCAL | CREAD;
 
-    /* CSIZE, HUPCL, CRTSCTS (hardware flow control) */
+    /* CRTSCTS (hardware flow control) ，disable*/
+    newtio.c_cflag &= ~CRTSCTS;
 
     /* Set data bits (5, 6, 7, 8 bits)
         CSIZE        Bit mask for data bits

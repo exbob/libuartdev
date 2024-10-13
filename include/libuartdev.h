@@ -35,16 +35,43 @@ typedef struct _uartdev_t
 
 } uartdev_t;
 
+/*
+Create a new UART device structure , allocate memory and initialize it.
+If the creation fails, it will return a null pointer，and set the errno.
+
+arguments : const char *port , UART device file name ,"/dev/ttyS1", "/dev/ttyUSB0"
+            int baud , 1200 ~ 4000000
+            char parity , 'N'/'n', 'O'/'o', 'E'/'e'
+            int data_bit , data bit , 5, 6, 7, 8
+            int stop_bit , stop bit , 1 or 2
+*/
 uartdev_t *uartdev_new(const char *port, int baud, int data_bit, char parity, int stop_bit);
 
+/*
+Open serial port and set the attributes use uartdev_t *dev。
+If successful return 0, otherwise errno is returned
+*/
 int uartdev_setup(uartdev_t *dev);
 
+/*
+Delete the devicev structure created by uartdev_new(), and free the memory.
+The normal return value is 0. Otherwise errno is returned .
+*/
 int uartdev_del(uartdev_t *dev);
 
+/*
+Send data of specified length
+*/
 int uartdev_send(uartdev_t *dev, const char *buf, int len);
 
+/*
+Receive data of specified length
+*/
 int uartdev_recv(uartdev_t *dev, char *buf, int len);
 
+/*
+Clear the data buffer of serial port, both receiving and sending
+*/
 int uartdev_flush(uartdev_t *dev);
 
 #endif
