@@ -41,6 +41,10 @@ void help()
     printf("  -z   stop bit , 1 or 2 ,default 1 \n");
     printf("  -v   output more infomation\n");
     printf("  -h   help \n");
+
+    printf("\n");
+    printf("Base on:\n");
+    uartdev_version();
 }
 
 /*

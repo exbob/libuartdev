@@ -74,4 +74,9 @@ Clear the data buffer of serial port, both receiving and sending
 */
 int uartdev_flush(uartdev_t *dev);
 
+/*
+print version information
+*/
+void uartdev_version();
+
 #endif

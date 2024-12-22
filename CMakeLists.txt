@@ -24,6 +24,30 @@ message(STATUS "Message : lib${LIB_NAME} : ${lib${LIB_NAME}_src}")
 # 头文件都放在 include 目录下，调用库函数需要包括的头文件叫做公共头文件，在 lib${LIB_NAME}_inc 变量中列出
 set(lib${LIB_NAME}_inc include/libuartdev.h)
 
+# 获得编译的 UTC 时间，存储在 BUILD_TIME 变量
+string(TIMESTAMP BUILD_TIME "%Y.%m.%d %H:%M" UTC)
+message(STATUS "Build Time: " ${BUILD_TIME})
+# 如果存在 git ，就执行获取 git 提交版本
+find_package(Git)
+if(Git_FOUND)
+    message(STATUS "Git found: ${GIT_EXECUTABLE}")
+    # 获取最新的 git commit hash，存储在 GIT_HASH 变量
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} log -1 --format=%H
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+        OUTPUT_VARIABLE GIT_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    
+    # 获取最新的 commit 日期，YYYY-MM-DD，存储在 GIT_DATA 变量
+    execute_process(COMMAND ${GIT_EXECUTABLE} log -1 --format=%cd --date=default
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE  GIT_DATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "Git Commit ${GIT_HASH}, Date ${GIT_DATE}")
+endif()
+
 # ----------------------------------------------------
 
 # 新建项目
@@ -42,6 +66,11 @@ set_target_properties(${LIB_NAME} PROPERTIES
 
 # 设置头文件搜索路径
 target_include_directories(${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+
+# 设置配置文件
+configure_file(Config.h.in Config.h)
+# 将 cmake 的顶层构建目录添加到 include 搜索路径
+target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_BINARY_DIR})
 
 # 如果是 Debug 版本，就添加 __DEBUG__ 宏定义，添加 -Wall 编译选项
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

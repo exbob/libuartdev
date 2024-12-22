@@ -11,6 +11,7 @@ This program is free software; you can redistribute it and/or modify it under th
 #include <sys/file.h>
 #include <errno.h>
 #include <termios.h>
+#include "Config.h"
 
 #include "libuartdev.h"
 
@@ -447,4 +448,15 @@ Clear the data buffer of serial port, both receiving and sending
 int uartdev_flush(uartdev_t *dev)
 {
     return tcflush(dev->fd, TCIOFLUSH);
+}
+
+/*
+print version information
+*/
+void uartdev_version()
+{
+    printf("%s, version %s\n", PROJECT, VERSION);
+    printf("Commit ID: %s\n", GIT_HASH);
+    printf("Commit Data: %s\n", GIT_DATE);
+    printf("Build Time: %s UTC\n", BUILD_TIME);
 }
